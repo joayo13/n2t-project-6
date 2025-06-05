@@ -1,1 +1,5 @@
-print('n2t')
+
+
+class Parser:
+    def __init__(self):
+        f = open("test.asm")
