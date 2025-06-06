@@ -2,4 +2,8 @@
 
 class Parser:
     def __init__(self):
-        f = open("test.asm")
+        with open("test.asm", "r") as file:
+            for line in file:
+                print((line.strip()))
+
+obj = Parser()
