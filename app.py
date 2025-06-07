@@ -34,5 +34,5 @@ class Parser:
             self.advance()
             print(self.current_command)
 
-obj = Parser("test.asm")
-obj.print_lines()
+test = Parser("test.asm")
+test.print_lines()
