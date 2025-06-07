@@ -51,6 +51,14 @@ class Parser:
         if self.command_type() == "COMMAND_C":
             if "=" in self.current_command:
                 return self.current_command.split("=")[0]
+    def comp(self): 
+        if self.command_type() == "COMMAND_C":
+            if "=" in self.current_command:
+                return self.current_command.split("=")[1]
+    def jump(self):
+        if self.command_type() == "COMMAND_C":
+            if ";" in self.current_command:
+                return self.current_command.split(";")[1]
 
 test = Parser("test.asm")
 test.print_lines()
