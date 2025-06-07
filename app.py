@@ -32,7 +32,7 @@ class Parser:
     def print_lines(self):
         for line in self.lines:
             self.advance()
-            print(self.symbol())
+            print(self.dest())
     
     def command_type(self):
         if self.current_command.startswith("@"):
@@ -47,6 +47,10 @@ class Parser:
             return self.current_command.strip("@")
         elif self.command_type() == "COMMAND_L":
             return self.current_command.strip("()")
+    def dest(self):
+        if self.command_type() == "COMMAND_C":
+            if "=" in self.current_command:
+                return self.current_command.split("=")[0]
 
 test = Parser("test.asm")
 test.print_lines()
