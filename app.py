@@ -68,24 +68,68 @@ class Code:
         self.dest_bin = "0b"
         self.comp_bin = "0b"
         self.jump_bin = "0b"
-    def dest(self):
-        match parsed.dest():
-            case None:
-                self.dest_bin += "000"
-            case "M":
-                self.dest_bin += "001" 
+    def comp(self):
+        match parsed.comp():
+            case "0":
+                self.comp_bin += "0101010"
+            case "1":
+                self.comp_bin += "0111111"
+            case "-1":
+                self.comp_bin += "0111010"
             case "D":
-                self.dest_bin += "010" 
-            case "MD":
-                self.dest_bin += "011" 
+                self.comp_bin += "0001100"
             case "A":
-                self.dest_bin += "100" 
-            case "AM":
-                self.dest_bin += "101" 
-            case "AD":
-                self.dest_bin += "110" 
-            case "AMD":
-                self.dest_bin += "111" 
+                self.comp_bin += "0110000"
+            case "!D":
+                self.comp_bin += "0001101"
+            case "!A":
+                self.comp_bin += "0110001"
+            case "-D":
+                self.comp_bin += "0001111"
+            case "-A":
+                self.comp_bin += "0110011"
+            case "D+1":
+                self.comp_bin += "0011111"
+            case "A+1":
+                self.comp_bin += "0110111"
+            case "D-1":
+                self.comp_bin += "0001110"
+            case "A-1":
+                self.comp_bin += "0110010"
+            case "D+A":
+                self.comp_bin += "0000010"
+            case "D-A":
+                self.comp_bin += "0010011"
+            case "A-D":
+                self.comp_bin += "0000111"
+            case "D&A":
+                self.comp_bin += "0000000"
+            case "D|A":
+                self.comp_bin += "0010101"
+            case "M":
+                self.comp_bin += "1110000"
+            case "!M":
+                self.comp_bin += "1110001"
+            case "-M":
+                self.comp_bin += "1110011"
+            case "M+1":
+                self.comp_bin += "1110111"
+            case "M-1":
+                self.comp_bin += "1110010"
+            case "D+M":
+                self.comp_bin += "1000010"
+            case "D-M":
+                self.comp_bin += "1010011"
+            case "M-D":
+                self.comp_bin += "1000111"
+            case "D&M":
+                self.comp_bin += "1000000"
+            case "D|M":
+                self.comp_bin += "1010101"
+            case _:
+                raise ValueError("Invalid comp mnemonic")
+parsed.advance()
+parsed.advance()
 coded = Code()
 coded.dest()
 print(coded.dest_bin)
