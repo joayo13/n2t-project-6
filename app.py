@@ -24,7 +24,7 @@ class Parser:
         return True
     
     def advance(self):
-        if self.has_more_commands:
+        if self.has_more_commands():
             self.current_command = self.lines[self.command_counter]
             self.command_counter += 1
         
@@ -60,5 +60,35 @@ class Parser:
             if ";" in self.current_command:
                 return self.current_command.split(";")[1]
 
-test = Parser("test.asm")
-test.print_lines()
+parsed = Parser("test.asm")
+
+
+class Code:
+    def __init__(self):
+        self.dest_bin = "0b"
+        self.comp_bin = "0b"
+        self.jump_bin = "0b"
+    def dest(self):
+        match parsed.dest():
+            case None:
+                self.dest_bin += "000"
+            case "M":
+                self.dest_bin += "001" 
+            case "D":
+                self.dest_bin += "010" 
+            case "MD":
+                self.dest_bin += "011" 
+            case "A":
+                self.dest_bin += "100" 
+            case "AM":
+                self.dest_bin += "101" 
+            case "AD":
+                self.dest_bin += "110" 
+            case "AMD":
+                self.dest_bin += "111" 
+coded = Code()
+coded.dest()
+print(coded.dest_bin)
+
+                
+            
