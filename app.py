@@ -62,77 +62,86 @@ class Parser:
 
 parsed = Parser("test.asm")
 
+DEST_TABLE = {
+    None:  "000",
+    "M":   "001",
+    "D":   "010",
+    "MD":  "011",
+    "A":   "100",
+    "AM":  "101",
+    "AD":  "110",
+    "AMD": "111"
+}
+
+COMP_TABLE = {
+    # a=0
+    "0"  : "0101010",
+    "1"  : "0111111",
+    "-1" : "0111010",
+    "D"  : "0001100",
+    "A"  : "0110000",
+    "!D" : "0001101",
+    "!A" : "0110001",
+    "-D" : "0001111",
+    "-A" : "0110011",
+    "D+1": "0011111",
+    "A+1": "0110111",
+    "D-1": "0001110",
+    "A-1": "0110010",
+    "D+A": "0000010",
+    "D-A": "0010011",
+    "A-D": "0000111",
+    "D&A": "0000000",
+    "D|A": "0010101",
+    # a=1
+    "M"  : "1110000",
+    "!M" : "1110001",
+    "-M" : "1110011",
+    "M+1": "1110111",
+    "M-1": "1110010",
+    "D+M": "1000010",
+    "D-M": "1010011",
+    "M-D": "1000111",
+    "D&M": "1000000",
+    "D|M": "1010101"
+}
+
+JUMP_TABLE = {
+    None:  "000",
+    "JGT": "001",
+    "JEQ": "010",
+    "JGE": "011",
+    "JLT": "100",
+    "JNE": "101",
+    "JLE": "110",
+    "JMP": "111"
+}
 
 class Code:
     def __init__(self):
-        self.dest_bin = "0b"
-        self.comp_bin = "0b"
-        self.jump_bin = "0b"
-    def comp(self):
-        match parsed.comp():
-            case "0":
-                self.comp_bin += "0101010"
-            case "1":
-                self.comp_bin += "0111111"
-            case "-1":
-                self.comp_bin += "0111010"
-            case "D":
-                self.comp_bin += "0001100"
-            case "A":
-                self.comp_bin += "0110000"
-            case "!D":
-                self.comp_bin += "0001101"
-            case "!A":
-                self.comp_bin += "0110001"
-            case "-D":
-                self.comp_bin += "0001111"
-            case "-A":
-                self.comp_bin += "0110011"
-            case "D+1":
-                self.comp_bin += "0011111"
-            case "A+1":
-                self.comp_bin += "0110111"
-            case "D-1":
-                self.comp_bin += "0001110"
-            case "A-1":
-                self.comp_bin += "0110010"
-            case "D+A":
-                self.comp_bin += "0000010"
-            case "D-A":
-                self.comp_bin += "0010011"
-            case "A-D":
-                self.comp_bin += "0000111"
-            case "D&A":
-                self.comp_bin += "0000000"
-            case "D|A":
-                self.comp_bin += "0010101"
-            case "M":
-                self.comp_bin += "1110000"
-            case "!M":
-                self.comp_bin += "1110001"
-            case "-M":
-                self.comp_bin += "1110011"
-            case "M+1":
-                self.comp_bin += "1110111"
-            case "M-1":
-                self.comp_bin += "1110010"
-            case "D+M":
-                self.comp_bin += "1000010"
-            case "D-M":
-                self.comp_bin += "1010011"
-            case "M-D":
-                self.comp_bin += "1000111"
-            case "D&M":
-                self.comp_bin += "1000000"
-            case "D|M":
-                self.comp_bin += "1010101"
-            case _:
-                raise ValueError("Invalid comp mnemonic")
+        self.bin = "0b"
+    def dest(self, mnemonic):
+        try:
+            self.bin += DEST_TABLE[mnemonic]
+        except KeyError:
+            raise ValueError(f"Invalid dest mnemonic: {mnemonic}")
+    def comp(self, mnemonic):
+        try:
+            self.bin += COMP_TABLE[mnemonic]
+        except KeyError:
+            raise ValueError(f"Invalid comp mnemonic: {mnemonic}")
+    def jump(self, mnemonic):
+        try:
+            self.bin += JUMP_TABLE[mnemonic]
+        except KeyError:
+            raise ValueError(f"Invalid jump mnemonic: {mnemonic}")
 parsed.advance()
 parsed.advance()
 coded = Code()
-coded.dest()
-print(coded.dest_bin)
+coded.dest(parsed.dest())
+coded.comp(parsed.comp())
+coded.jump(parsed.jump())
+print(coded.bin)
 
                 
             
