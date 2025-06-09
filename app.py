@@ -27,12 +27,6 @@ class Parser:
         if self.has_more_commands():
             self.current_command = self.lines[self.command_counter]
             self.command_counter += 1
-        
-
-    def print_lines(self):
-        for line in self.lines:
-            self.advance()
-            print(self.dest())
     
     def command_type(self):
         if self.current_command.startswith("@"):
@@ -121,8 +115,11 @@ JUMP_TABLE = {
 }
 
 class Code:
-    def __init__(self):
-        self.bin = "0b"
+    def __init__(self, command_type):
+        if command_type == "COMMAND_C":
+            self.bin = "111"
+        else:
+            self.bin = "0"
     def dest(self, mnemonic):
         try:
             self.bin += DEST_TABLE[mnemonic]
@@ -141,7 +138,26 @@ class Code:
 
 # test symbolless asm
 
-test = Parser()
+parsed = Parser("test.asm")
+
+
+
+
+with open("out.hack", "w") as outfile:
+    for line in parsed.lines:
+        parsed.advance()
+        if parsed.is_constant():
+            extracted_symbol = parsed.symbol()
+
+            outfile.write(format(int(extracted_symbol), '016b') + "\n")
+        elif parsed.command_type() == "COMMAND_C":
+            coded = Code(parsed.command_type())
+            coded.comp(parsed.comp())
+            coded.dest(parsed.dest())
+            coded.jump(parsed.jump())
+            outfile.write(coded.bin + "\n")
+
+
 
                 
             
