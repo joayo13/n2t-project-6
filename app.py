@@ -54,6 +54,8 @@ class Parser:
         if self.command_type() == "COMMAND_C":
             if "=" in self.current_command:
                 return self.current_command.split("=")[1]
+            elif ";" in self.current_command:
+                return self.current_command.split(";")[0]
     def jump(self):
         if self.command_type() == "COMMAND_C":
             if ";" in self.current_command:
