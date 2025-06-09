@@ -47,6 +47,11 @@ class Parser:
             return self.current_command.strip("@")
         elif self.command_type() == "COMMAND_L":
             return self.current_command.strip("()")
+        
+    def is_constant(self):
+        if self.command_type() == "COMMAND_A":
+            return self.symbol().isnumeric()
+        
     def dest(self):
         if self.command_type() == "COMMAND_C":
             if "=" in self.current_command:
@@ -59,8 +64,6 @@ class Parser:
         if self.command_type() == "COMMAND_C":
             if ";" in self.current_command:
                 return self.current_command.split(";")[1]
-
-parsed = Parser("test.asm")
 
 DEST_TABLE = {
     None:  "000",
@@ -135,13 +138,10 @@ class Code:
             self.bin += JUMP_TABLE[mnemonic]
         except KeyError:
             raise ValueError(f"Invalid jump mnemonic: {mnemonic}")
-parsed.advance()
-parsed.advance()
-coded = Code()
-coded.dest(parsed.dest())
-coded.comp(parsed.comp())
-coded.jump(parsed.jump())
-print(coded.bin)
+
+# test symbolless asm
+
+test = Parser()
 
                 
             
