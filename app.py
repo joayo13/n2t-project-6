@@ -139,6 +139,9 @@ class Code:
             raise ValueError(f"Invalid jump mnemonic: {mnemonic}")
 
 # test symbolless asm
+class SymbolTable:
+    def __init__(self):
+        self.table = {}
 
 parsed = Parser("test.asm")
 
