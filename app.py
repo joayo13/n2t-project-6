@@ -166,6 +166,15 @@ class SymbolTable:
             "SCREEN": 16384,
             "KBD": 24576,
         }
+    def add_entry(self, name, address):
+        self.table[name] = address
+    
+    def contains(self, name):
+        if name in self.table:
+            return True
+        return False
+    def get_address(self, name):
+        return self.table[name] 
 
 parsed = Parser("test.asm")
 
