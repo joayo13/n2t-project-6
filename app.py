@@ -177,25 +177,43 @@ class SymbolTable:
         return self.table[name] 
 
 parsed = Parser("test.asm")
-
-
-
+symbol_table = SymbolTable()
 
 with open("out.hack", "w") as outfile:
+    rom_address = 0
+    ram_address = 16
+    
     for line in parsed.lines:
+
         parsed.advance()
+
+        if parsed.command_type() == "COMMAND_A" or parsed.command_type() == "COMMAND_C":
+            rom_address += 1
+        
+        elif parsed.command_type() == "COMMAND_L":
+            if not symbol_table.contains(parsed.symbol()):
+                symbol_table.add_entry(parsed.symbol(), rom_address)
+
+    parsed.command_counter = 0
+
+    for line in parsed.lines:
+        
+        parsed.advance()
+
         if parsed.is_constant():
             extracted_symbol = parsed.symbol()
-
             outfile.write(format(int(extracted_symbol), '016b') + "\n")
+        
+        elif parsed.command_type() == "COMMAND_A":
+            # if its not a constant, its a variable assignment and we'll add it to the symbol table and/or write its saved ram_address
+            if not symbol_table.contains(parsed.symbol()):
+                symbol_table.add_entry(parsed.symbol(), ram_address)
+                ram_address += 1
+            outfile.write(format(int(symbol_table.table[parsed.symbol()]), '016b') + "\n")
+
         elif parsed.command_type() == "COMMAND_C":
             coded = Code(parsed.command_type())
             coded.comp(parsed.comp())
             coded.dest(parsed.dest())
             coded.jump(parsed.jump())
             outfile.write(coded.bin + "\n")
-
-
-
-                
-            
